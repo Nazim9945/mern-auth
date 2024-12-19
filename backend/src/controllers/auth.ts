@@ -66,7 +66,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
                 })
                 return;
             }
-          if(await bcrypt.compare(isExist.password,password)){
+          if(await bcrypt.compare(password,isExist.password)){
                 const payload = {
                   id: isExist._id,
                 };
@@ -80,10 +80,12 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
                 });
                 return;
           }
-          res.status(404).json({
-            message:"password is incorrect"
-          })
-          return;
+         else{
+             res.status(404).json({
+               message: "password is incorrect",
+             });
+             return;
+         }
 
         } catch (error) {
             console.log(error);
