@@ -1,9 +1,13 @@
 import express from 'express'
 import userRoute from './routes/index'
 import mongoose, { mongo } from 'mongoose'
+import dotenv from 'dotenv'
+dotenv.config()
 const app=express()
+console.log(process.env.PORT)
+console.log(process.env.MONGO_URL);
 const dbconnect=async()=>{
-    mongoose.connect(process.env.MONOGO_URL || "").then(res=>{
+    mongoose.connect(process.env.MONGO_URL || "").then(res=>{
         console.log("mongodb connected successfully")
     }).catch(err=>{
         console.log(err);
@@ -18,7 +22,9 @@ app.use('/api/v1',userRoute)
 
 const PORT=process.env.PORT || 5000
 
-
+app.listen(PORT,()=>{
+    console.log(`app is running at ${PORT}`)
+})
 app.get('/',()=>{
-    console.log(`app is working at ${PORT} port`)
+    console.log(`Easy peasy`)
 })

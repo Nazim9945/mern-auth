@@ -25,8 +25,8 @@ const signup: RequestHandler = async (
         return;
     }
     const hashpwd=await bcrypt.hash(password,10);
-
-    const newuser=await User.create({firstName,lastName,email,password:hashpwd});
+    const image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
+    const newuser=await User.create({firstName,lastName,email,password:hashpwd,image});
     const payload={
         id:newuser._id,        
     }
@@ -81,7 +81,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
                 return;
           }
           res.status(404).json({
-            message:"password is incorrect";
+            message:"password is incorrect"
           })
           return;
 
