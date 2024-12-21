@@ -2,8 +2,10 @@ import express from 'express'
 import userRoute from './routes/index'
 import mongoose, { mongo } from 'mongoose'
 import dotenv from 'dotenv'
+import cors from 'cors'
 dotenv.config()
 const app=express()
+app.use(cors())
 console.log(process.env.PORT)
 console.log(process.env.MONGO_URL);
 const dbconnect=async()=>{

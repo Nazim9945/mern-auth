@@ -1,16 +1,48 @@
 import { ChangeEvent, useState } from "react"
+import { useNavigate } from "react-router-dom"
 
 
 const SignupPage = () => {
     const [formData,setFormData]=useState({ firstName:"",lastName:"",email:"",password:""}) 
+    const[loading,setLoading]=useState(false);
+    const[error,setError]=useState("");
+    const navigate=useNavigate();
     const handler=(e:ChangeEvent<HTMLInputElement>)=>{
     const {name,value}=e.target
     setFormData({...formData,[name]:value})
     }
-    const submitHandler=(e:React.FormEvent<HTMLFormElement>)=>{
+    const submitHandler=async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
-    console.log(formData)
+    try {
+        setLoading(true)
+        const option = {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData),
+        };
+        const data = await fetch("http://localhost:4000/api/v1/signup", option);
+        const result = await data.json();
+        if(result.success===false){
+            setLoading(false);
+            setError(result.message);
+            return;
+        }
+        localStorage.setItem("token", result.token);
+        setLoading(false);
+        
+    } catch (error) {
+        setLoading(false);
+        setError("error while registering user")
+        console.log(error)
+    }
+    
+
+    // console.log(formData)
     setFormData({firstName:"",lastName:"",email:"",password:""})
+    navigate("/dashboard")
+    
     }
   return (
     <div>
@@ -69,10 +101,13 @@ const SignupPage = () => {
             onChange={handler}
           />
         </label>
-        <button className="bg-blue-500 text-white p-2 rounded-md" type="submit">
-          signup
+        <button disabled={loading} className="bg-blue-500 text-white p-2 rounded-md disabled:bg-red-600" type="submit">
+          {loading ? "loading..." : "signup"}
         </button>
       </form>
+      <div>
+        {error && <div className="text-red-600 italic">{error}</div>}   
+      </div>
     </div>
   );
 }

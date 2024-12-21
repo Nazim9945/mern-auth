@@ -13,13 +13,15 @@ const signup: RequestHandler = async (
     const {firstName,lastName="",email,password}=req.body;
     if(!firstName  || !email || !password){
         res.status(404).json({
-            messahe:"All fields are required"
+            success:false,
+            message:"All fields are required"
         })
         return;
     }
     const isExist=await User.findOne({email});
     if(isExist){
         res.status(411).json({
+            success:false,
             message:"This user has an account"
         })
         return;
@@ -43,6 +45,7 @@ const signup: RequestHandler = async (
   } catch (error) {
     console.log(error);
     res.status(404).json({
+        success:false,
       message: "error while registering user",
     });
   }
@@ -56,6 +59,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
             if(!email || !password){
                 res.status(404).json(
                     {
+                        sucess:false,
                         message:"All fields are required"
                     }
                 )
@@ -63,6 +67,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
             const isExist=await User.findOne({email})
             if(!isExist){
                 res.status(404).json({
+                    success:false,  
                     message:"please register first!"
                 })
                 return;
@@ -83,6 +88,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
           }
          else{
              res.status(404).json({
+                success:false,
                message: "password is incorrect",
              });
              return;
@@ -91,6 +97,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
         } catch (error) {
             console.log(error);
             res.json(404).json({
+                success:false,  
                 message:"error while sign in"
             })
         }
@@ -104,6 +111,7 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
             const user=req.body.user;
             if(!firstName  || !password || !oldpassword){
                 res.status(404).json({
+                    success:false,  
                     message:"All fields are required"
                 })
                 return;
@@ -111,6 +119,7 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
             const isExist=await User.findOne({_id:user.id});
             if(!isExist){
                 res.status(404).json({
+                    success:false,
                     message:"please register first!"
                 })
                 return;
@@ -127,6 +136,7 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
             }
             else{
                 res.status(404).json({
+                    success:false,
                     message:"password is incorrect"
                 })
                 return;
@@ -136,6 +146,7 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
         }catch (error) {
             console.log(error);
             res.json(404).json({
+                success:false,
                 message:"error while updating user"
             })
         }
@@ -149,6 +160,7 @@ const deleteUser:RequestHandler=async(req:Request,res:Response)=>{
             const isExist=await User.findOne({_id:user.id});
             if(!isExist){
                 res.status(404).json({
+                    success:false,
                     message:"please register first!"
                 })
                 return;
@@ -161,6 +173,7 @@ const deleteUser:RequestHandler=async(req:Request,res:Response)=>{
         } catch (error) {
             console.log(error);
              res.json(404).json({
+                success:false,
                 message:"error while deleting user"
             })
         }
