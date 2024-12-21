@@ -7,7 +7,9 @@ const router=express.Router();
 
 router.post('/signup',signup)
 router.post('/signin',signin)
+//@ts-ignore
 router.put('/updateProfile',authMiddleware,updateUser)
-router.post('/deleteUser',authMiddleware,deleteUser)
+//@ts-ignore
+router.delete('/deleteUser',authMiddleware,deleteUser)
 
 export default router

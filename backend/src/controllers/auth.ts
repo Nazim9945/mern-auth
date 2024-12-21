@@ -36,7 +36,8 @@ const signup: RequestHandler = async (
 
     res.status(200).json({
         message:"user created !!",
-        token
+        token,
+        newuser
     })
     return;
   } catch (error) {
@@ -99,7 +100,39 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
 //update user
 const updateUser:RequestHandler=async(req:Request,res:Response)=>{
         try {
-            
+            const {firstName,lastName="",password,oldpassword }=req.body;
+            const user=req.body.user;
+            if(!firstName  || !password || !oldpassword){
+                res.status(404).json({
+                    message:"All fields are required"
+                })
+                return;
+            }
+            const isExist=await User.findOne({_id:user.id});
+            if(!isExist){
+                res.status(404).json({
+                    message:"please register first!"
+                })
+                return;
+            }
+            if(await bcrypt.compare(oldpassword,isExist.password)){
+                const hashpwd=await bcrypt.hash(password,10);
+                const image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
+                const newuser=await User.findByIdAndUpdate(user.id,{firstName,lastName,password:hashpwd,image},{new:true});
+                res.status(200).json({
+                    message:"user updated successfully!!",
+                    user:newuser
+                })
+                return;
+            }
+            else{
+                res.status(404).json({
+                    message:"password is incorrect"
+                })
+                return;
+            }
+
+
         }catch (error) {
             console.log(error);
             res.json(404).json({
@@ -112,7 +145,19 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
 //delete user
 const deleteUser:RequestHandler=async(req:Request,res:Response)=>{
         try {
-            console.log("delete user")
+            const user=req.body.user;
+            const isExist=await User.findOne({_id:user.id});
+            if(!isExist){
+                res.status(404).json({
+                    message:"please register first!"
+                })
+                return;
+            }
+            await User.findByIdAndDelete(user.id);
+            res.status(200).json({
+                message:"user deleted successfully!!"
+            })
+            return;
         } catch (error) {
             console.log(error);
              res.json(404).json({
