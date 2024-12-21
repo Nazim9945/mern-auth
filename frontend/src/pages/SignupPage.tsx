@@ -10,6 +10,7 @@ const SignupPage = () => {
     const submitHandler=(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     console.log(formData)
+    setFormData({firstName:"",lastName:"",email:"",password:""})
     }
   return (
     <div>
