@@ -49,7 +49,7 @@ const SignupPage = () => {
 
     // console.log(formData)
     setFormData({firstName:"",lastName:"",email:"",password:""})
-    navigate("/dashboard")
+    navigate("/")
     
     }
   return (
