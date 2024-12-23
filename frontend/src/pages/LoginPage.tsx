@@ -1,7 +1,10 @@
 import { ChangeEvent, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import { setUser } from "../redux/slices/userSlice";
 
 const LoginPage = () => {
+    const dispatch = useDispatch();
   const [formData, setFormData] = useState({  
     email: "",
     password: "",
@@ -34,6 +37,9 @@ const LoginPage = () => {
             return;
         }
         localStorage.setItem("token", result.token);
+        let newuser = JSON.stringify(result.newuser);
+        localStorage.setItem("user", newuser);
+        dispatch(setUser(result.newuser));
         setLoading(false);
         setFormData({ email: "", password: "" });
         navigate("/dashboard");

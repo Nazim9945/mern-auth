@@ -1,11 +1,17 @@
 import { ChangeEvent, useState } from "react"
+import { useDispatch, useSelector } from "react-redux"
 import { useNavigate } from "react-router-dom"
+import { RootState} from "../redux/store"
+import { signInFailure, signInStart, setUser } from "../redux/slices/userSlice"
+
 
 
 const SignupPage = () => {
+    const dispatch=useDispatch()
+
+    const {loading,error}=useSelector((store:RootState)=>store.user)
     const [formData,setFormData]=useState({ firstName:"",lastName:"",email:"",password:""}) 
-    const[loading,setLoading]=useState(false);
-    const[error,setError]=useState("");
+   
     const navigate=useNavigate();
     const handler=(e:ChangeEvent<HTMLInputElement>)=>{
     const {name,value}=e.target
@@ -14,7 +20,7 @@ const SignupPage = () => {
     const submitHandler=async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     try {
-        setLoading(true)
+       dispatch(signInStart())
         const option = {
           method: "POST",
           headers: {
@@ -24,17 +30,19 @@ const SignupPage = () => {
         };
         const data = await fetch("http://localhost:4000/api/v1/signup", option);
         const result = await data.json();
+        console.log(result);
         if(result.success===false){
-            setLoading(false);
-            setError(result.message);
+           dispatch(signInFailure(result.message))
             return;
         }
+       dispatch(setUser(result.newuser));
         localStorage.setItem("token", result.token);
-        setLoading(false);
+        let newuser = JSON.stringify(result.newuser);
+        localStorage.setItem("user", newuser);
         
     } catch (error) {
-        setLoading(false);
-        setError("error while registering user")
+        //@ts-ignore
+       dispatch(signInFailure(error.message))
         console.log(error)
     }
     

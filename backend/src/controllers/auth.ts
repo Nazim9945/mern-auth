@@ -83,6 +83,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
                 res.status(200).json({
                   message: "user logged in successfully!!",
                   token,
+                  newuser: isExist,
                 });
                 return;
           }
