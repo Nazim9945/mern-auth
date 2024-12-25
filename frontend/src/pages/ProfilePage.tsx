@@ -2,7 +2,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { RootState} from "../redux/store"
 import { useState } from "react"
 import { setUser } from "../redux/slices/userSlice"
-
+import { useNavigate } from "react-router-dom"
 const PorfilePage = () => {
   const dispatch=useDispatch()
   const [firstName,setFirstName]=useState("") 
@@ -10,6 +10,7 @@ const PorfilePage = () => {
   const [newpassword,setNewPassword]=useState("") 
   const [oldpassword,setOldPassword]=useState("") 
   const currentuser=useSelector((store:RootState)=>store.user.currentuser)
+  const navigate=useNavigate();
   const submitHandler=async(e:React.FormEvent<HTMLFormElement>)=>{ 
     e.preventDefault()
     console.log({firstName,lastName,newpassword,oldpassword})
@@ -31,6 +32,27 @@ const PorfilePage = () => {
     console.log(result.newuser)
 
   }
+  const dltUserHandler=async()=>{
+    const options={
+      method:"DELETE",
+      headers:{
+        "Content-Type":"application/json",
+        "token":`${localStorage.getItem("token")}`
+      },
+      body:JSON.stringify({token:localStorage.getItem("token")})
+
+  }
+  const data=await fetch("http://localhost:4000/api/v1/deleteUser",options);  
+  const result=await data.json();
+  if(result.success===false){
+    console.log(result.message)
+    return;
+  }
+  localStorage.removeItem("token");
+  localStorage.removeItem("user");
+  dispatch(setUser(null))
+  navigate("/signin")
+}
   return (
     <div className="max-w-screen-lg mx-auto p-4">
       <div className="flex flex-col gap-4 justify-center items-center">
@@ -53,7 +75,6 @@ const PorfilePage = () => {
               className="border-2 border-gray-500 px-4 py-2 rounded-md w-[400px]"
               defaultValue={currentuser?.firstName}
               placeholder="first name"
-             
             />
           </label>
           <label htmlFor="">
@@ -64,7 +85,6 @@ const PorfilePage = () => {
               className="border-2 border-gray-500 px-4 py-2 rounded-md w-[400px]"
               defaultValue={currentuser?.lastName}
               placeholder="last name"
-              
             />
           </label>
           <label>
@@ -73,7 +93,6 @@ const PorfilePage = () => {
               onChange={(e) => setNewPassword(e.target.value)}
               type="password"
               placeholder="New password"
-             
               className="border-2 border-gray-500 px-4 py-2 rounded-md w-[400px]"
             />
           </label>
@@ -83,7 +102,6 @@ const PorfilePage = () => {
               onChange={(e) => setOldPassword(e.target.value)}
               type="password"
               placeholder="Old password"
-             
               className="border-2 border-gray-500 px-4 py-2 rounded-md w-[400px]"
             />
           </label>
@@ -91,6 +109,7 @@ const PorfilePage = () => {
             update
           </button>
         </form>
+          <div onClick={dltUserHandler} className=" inline-block text-sm italic font-semibold text-red-900 cursor-pointer active:scale-50 transition-all duration-200">Delete user</div>
       </div>
     </div>
   );
