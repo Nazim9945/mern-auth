@@ -52,17 +52,14 @@ const LoginPage = () => {
     
   };
   return (
-    <div>
-      <form
-        className="flex flex-col gap-4 max-w-screen-sm"
-        onSubmit={submitHandler}
-      >
+    <div className="max-w-screen-sm  h-screen mx-auto p-4 flex flex-col  items-center justify-center">
+      <form className="flex flex-col gap-6" onSubmit={submitHandler}>
         <label>
           <div>
             Email<sup>*</sup>
           </div>
           <input
-            className="border-2 border-gray-500 p-2 rounded-md"
+            className="border-2 border-gray-500 px-3 py-2 rounded-md lg:w-[300px]"
             type="email"
             name="email"
             value={formData.email}
@@ -75,7 +72,7 @@ const LoginPage = () => {
             Password<sup>*</sup>
           </div>
           <input
-            className="border-2 border-gray-500 p-2 rounded-md"
+            className="border-2 border-gray-500 px-3 py-2 rounded-md lg:w-[300px]"
             type="Password"
             name="password"
             value={formData.password}
@@ -83,13 +80,15 @@ const LoginPage = () => {
             onChange={handler}
           />
         </label>
-        <button disabled={loading} className="bg-blue-500 text-white p-2 rounded-md disabled:bg-red-600" type="submit">
-          {loading ? "Loading..." : "signin"}   
+        <button
+          disabled={loading}
+          className="bg-blue-500 text-white px-3 py-2 rounded-md disabled:bg-red-600 lg:w-[300px]"
+          type="submit"
+        >
+          {loading ? "Loading..." : "signin"}
         </button>
       </form>
-      <div>
-        {error && <div className="text-red-600 italic">{error}</div>}
-        </div>
+      <div>{error && <div className="text-red-600 italic">{error}</div>}</div>
     </div>
   );
 };

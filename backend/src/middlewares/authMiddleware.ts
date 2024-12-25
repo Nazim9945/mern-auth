@@ -5,7 +5,8 @@ import { NextFunction, Request,Response } from "express";
 import jwt from "jsonwebtoken";
 export const authMiddleware= async(req:Request,res:Response,next:NextFunction)=>{
         try {
-            const token=req.header("token");
+           
+            const token=req.headers.token || req.body.token;
             if(!token){
                 return res.status(404).json({
                     message:"please login first"
@@ -17,6 +18,7 @@ export const authMiddleware= async(req:Request,res:Response,next:NextFunction)=>
                     message:"please login first"
                 })
             }
+           
             req.body.user=payload;
             next();
             

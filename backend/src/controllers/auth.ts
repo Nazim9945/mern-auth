@@ -108,49 +108,53 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
 //update user
 const updateUser:RequestHandler=async(req:Request,res:Response)=>{
         try {
-            const {firstName,lastName="",password,oldpassword }=req.body;
+            let {firstName,lastName,newpassword,oldpassword }=req.body;
             const user=req.body.user;
-            if(!firstName  || !password || !oldpassword){
-                res.status(404).json({
-                    success:false,  
-                    message:"All fields are required"
-                })
-                return;
-            }
+            
             const isExist=await User.findOne({_id:user.id});
-            if(!isExist){
-                res.status(404).json({
-                    success:false,
-                    message:"please register first!"
-                })
-                return;
-            }
-            if(await bcrypt.compare(oldpassword,isExist.password)){
-                const hashpwd=await bcrypt.hash(password,10);
-                const image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
+            firstName=firstName || isExist?.firstName;
+            lastName=lastName || isExist?.lastName;
+            if(newpassword){
+                if(!oldpassword){
+                    res.status(404).json({
+                        success:false,
+                        message:"please provide old password"
+                    })
+                    return;
+                }
+                console.log(isExist?.password)
+                if(!await bcrypt.compare(oldpassword,isExist?.password || "")){   
+                    console.log("running")
+                    res.status(404).json({
+                        success:false,
+                        message:"old password is incorrect"
+                    })
+                    return;
+                }
+                 let image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
+                let hashpwd=await bcrypt.hash(newpassword,10);
                 const newuser=await User.findByIdAndUpdate(user.id,{firstName,lastName,password:hashpwd,image},{new:true});
                 res.status(200).json({
                     message:"user updated successfully!!",
-                    user:newuser
+                    newuser
                 })
                 return;
             }
-            else{
-                res.status(404).json({
-                    success:false,
-                    message:"password is incorrect"
-                })
-                return;
-            }
-
-
-        }catch (error) {
+            let image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
+            const newuser=await User.findByIdAndUpdate(user.id,{firstName,lastName,image},{new:true});
+            res.status(200).json({
+                message:"user updated successfully!!",
+                newuser
+            })
+            return;
+        } catch (error) {
             console.log(error);
             res.json(404).json({
                 success:false,
                 message:"error while updating user"
             })
-        }
+        }   
+          
 }
 
 

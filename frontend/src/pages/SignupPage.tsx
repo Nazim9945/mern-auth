@@ -53,17 +53,14 @@ const SignupPage = () => {
     
     }
   return (
-    <div>
-      <form
-        className="flex flex-col gap-4 max-w-screen-sm"
-        onSubmit={submitHandler}
-      >
+    <div className="max-w-screen-sm h-screen mx-auto p-4 flex flex-col items-center justify-center">
+      <form className="flex flex-col  gap-4" onSubmit={submitHandler}>
         <label>
           <div>
             FirstName<sup>*</sup>
           </div>
           <input
-            className="border-2 border-gray-500 p-2 rounded-md"
+            className="border-2 border-gray-500 px-4 py-2 lg:w-[300px]  rounded-md"
             type="text"
             name="firstName"
             value={formData.firstName}
@@ -76,7 +73,7 @@ const SignupPage = () => {
             LastName<sup>*</sup>
           </div>
           <input
-            className="border-2 border-gray-500 p-2 rounded-md"
+            className="border-2 border-gray-500 px-4 py-2 lg:w-[300px]  rounded-md"
             type="text"
             name="lastName"
             value={formData.lastName}
@@ -88,7 +85,7 @@ const SignupPage = () => {
             Email<sup>*</sup>
           </div>
           <input
-            className="border-2 border-gray-500 p-2 rounded-md"
+            className="border-2 border-gray-500 px-4 py-2 lg:w-[300px]  rounded-md"
             type="email"
             name="email"
             value={formData.email}
@@ -101,7 +98,7 @@ const SignupPage = () => {
             Password<sup>*</sup>
           </div>
           <input
-            className="border-2 border-gray-500 p-2 rounded-md"
+            className="border-2 border-gray-500 px-4 py-2 lg:w-[300px]  rounded-md"
             type="Password"
             name="password"
             value={formData.password}
@@ -109,13 +106,15 @@ const SignupPage = () => {
             onChange={handler}
           />
         </label>
-        <button disabled={loading} className="bg-blue-500 text-white p-2 rounded-md disabled:bg-red-600" type="submit">
+        <button
+          disabled={loading}
+          className="bg-blue-500 text-white px-4 py-2 lg:w-[300px]  rounded-md disabled:bg-red-600"
+          type="submit"
+        >
           {loading ? "loading..." : "signup"}
         </button>
       </form>
-      <div>
-        {error && <div className="text-red-600 italic">{error}</div>}   
-      </div>
+      <div>{error && <div className="text-red-600 italic">{error}</div>}</div>
     </div>
   );
 }
