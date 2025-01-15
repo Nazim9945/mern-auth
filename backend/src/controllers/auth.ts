@@ -29,17 +29,17 @@ const signup: RequestHandler = async (
     const hashpwd=await bcrypt.hash(password,10);
     const image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
     const newuser=await User.create({firstName,lastName,email,password:hashpwd,image});
-    const payload={
-        id:newuser._id,        
-    }
-    const token=jwt.sign(payload,process.env.JWT_SECRET || "",{
-        expiresIn:'1d'
-    });
+    console.log(newuser);
+    // const payload={
+    //     id:newuser._id,        
+    // }
+    // const token=jwt.sign(payload,process.env.JWT_SECRET || "",{
+    //     expiresIn:'1d'
+    // });
 
     res.status(200).json({
         message:"user created !!",
-        token,
-        newuser
+        user:newuser
     })
     return;
   } catch (error) {
@@ -63,12 +63,13 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
                         message:"All fields are required"
                     }
                 )
+                return;
             }
             const isExist=await User.findOne({email})
             if(!isExist){
                 res.status(404).json({
                     success:false,  
-                    message:"please register first!"
+                    message:"User does not exist!"
                 })
                 return;
             }
@@ -83,7 +84,7 @@ const signin:RequestHandler=async(req:Request,res:Response)=>{
                 res.status(200).json({
                   message: "user logged in successfully!!",
                   token,
-                  newuser: isExist,
+                  user: isExist,
                 });
                 return;
           }
@@ -136,7 +137,7 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
                 const newuser=await User.findByIdAndUpdate(user.id,{firstName,lastName,password:hashpwd,image},{new:true});
                 res.status(200).json({
                     message:"user updated successfully!!",
-                    newuser
+                    user:newuser
                 })
                 return;
             }
@@ -144,7 +145,7 @@ const updateUser:RequestHandler=async(req:Request,res:Response)=>{
             const newuser=await User.findByIdAndUpdate(user.id,{firstName,lastName,image},{new:true});
             res.status(200).json({
                 message:"user updated successfully!!",
-                newuser
+                user:newuser
             })
             return;
         } catch (error) {

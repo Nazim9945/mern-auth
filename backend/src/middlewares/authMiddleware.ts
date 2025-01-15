@@ -15,7 +15,7 @@ export const authMiddleware= async(req:Request,res:Response,next:NextFunction)=>
             const payload=jwt.verify(token,process.env.JWT_SECRET || "");
             if(!payload){
                 return res.status(404).json({
-                    message:"please login first"
+                    message:"Token is invalid"
                 })
             }
            

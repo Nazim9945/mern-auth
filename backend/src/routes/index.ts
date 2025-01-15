@@ -10,6 +10,6 @@ router.post('/signin',signin)
 //@ts-ignore
 router.put('/updateProfile',authMiddleware,updateUser)
 //@ts-ignore
-router.delete('/deleteUser',authMiddleware,deleteUser)
+router.delete('/deleteProfile',authMiddleware,deleteUser)
 
 export default router
