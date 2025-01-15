@@ -1,6 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/userSlice";
 
 const LoginPage = () => {
@@ -36,9 +36,10 @@ const LoginPage = () => {
             return;
         }
         localStorage.setItem("token", result.token);
-        let newuser = JSON.stringify(result.newuser);
+        let newuser = JSON.stringify(result.user);
+        console.log(newuser);
         localStorage.setItem("user", newuser);
-        dispatch(setUser(result.newuser));
+        dispatch(setUser(newuser));
         setLoading(false);
         setFormData({ email: "", password: "" });
         navigate("/");
@@ -88,6 +89,7 @@ const LoginPage = () => {
           {loading ? "Loading..." : "signin"}
         </button>
       </form>
+      <div>Don't have an account? <Link className="underline text-blue-900" to={'/signup'}>Signup</Link></div>
       <div>{error && <div className="text-red-600 italic">{error}</div>}</div>
     </div>
   );

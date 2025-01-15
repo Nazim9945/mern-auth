@@ -1,8 +1,8 @@
 import { ChangeEvent, useState } from "react"
 import { useDispatch, useSelector } from "react-redux"
-import { useNavigate } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { RootState} from "../redux/store"
-import { signInFailure, signInStart, setUser } from "../redux/slices/userSlice"
+import { signUpFailure, signUpStart, setUser } from "../redux/slices/userSlice"
 
 
 
@@ -20,7 +20,7 @@ const SignupPage = () => {
     const submitHandler=async(e:React.FormEvent<HTMLFormElement>)=>{
     e.preventDefault()
     try {
-       dispatch(signInStart())
+       dispatch(signUpStart())
         const option = {
           method: "POST",
           headers: {
@@ -32,17 +32,17 @@ const SignupPage = () => {
         const result = await data.json();
         console.log(result);
         if(result.success===false){
-           dispatch(signInFailure(result.message))
+           dispatch(signUpFailure(result.message))
             return;
         }
-       dispatch(setUser(result.newuser));
+       dispatch(setUser(result.user));
         localStorage.setItem("token", result.token);
-        let newuser = JSON.stringify(result.newuser);
+        let newuser = JSON.stringify(result.user);
         localStorage.setItem("user", newuser);
         
     } catch (error) {
         //@ts-ignore
-       dispatch(signInFailure(error.message))
+       dispatch(signUpFailure(error.message))
         console.log(error)
     }
     
@@ -114,6 +114,12 @@ const SignupPage = () => {
           {loading ? "loading..." : "signup"}
         </button>
       </form>
+      <div>
+        Have an account already?{" "}
+        <Link className="underline text-blue-900" to={"/signin"}>
+          Signin
+        </Link>
+      </div>
       <div>{error && <div className="text-red-600 italic">{error}</div>}</div>
     </div>
   );
