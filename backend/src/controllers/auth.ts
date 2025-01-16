@@ -30,15 +30,16 @@ const signup: RequestHandler = async (
     const image=`https://api.dicebear.com/5.x/initials/svg?seed="${firstName} ${lastName}"`
     const newuser=await User.create({firstName,lastName,email,password:hashpwd,image});
     console.log(newuser);
-    // const payload={
-    //     id:newuser._id,        
-    // }
-    // const token=jwt.sign(payload,process.env.JWT_SECRET || "",{
-    //     expiresIn:'1d'
-    // });
+    const payload={
+        id:newuser._id,        
+    }
+    const token=jwt.sign(payload,process.env.JWT_SECRET || "",{
+        expiresIn:'1d'
+    });
 
     res.status(200).json({
         message:"user created !!",
+        token,
         user:newuser
     })
     return;
