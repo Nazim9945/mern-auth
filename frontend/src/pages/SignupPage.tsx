@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from "react-redux"
 import { Link, useNavigate } from "react-router-dom"
 import { RootState} from "../redux/store"
 import { signUpFailure, signUpStart, setUser } from "../redux/slices/userSlice"
+import { toast } from "react-toastify"
 
 
 
@@ -33,12 +34,14 @@ const SignupPage = () => {
         console.log(result);
         if(result.success===false){
            dispatch(signUpFailure(result.message))
+           toast(result.message)
             return;
         }
        dispatch(setUser(result.user));
         localStorage.setItem("token", result.token);
         let newuser = JSON.stringify(result.user);
         localStorage.setItem("user", newuser);
+        toast(result.message);
         
     } catch (error) {
         //@ts-ignore
@@ -53,8 +56,8 @@ const SignupPage = () => {
     
     }
   return (
-    <div className="max-w-screen-sm h-screen mx-auto p-4 flex flex-col items-center justify-center">
-      <form className="flex flex-col  gap-4" onSubmit={submitHandler}>
+    <div className="mx-auto p-4 w-[1000px]">
+      <form className="flex flex-col  gap-4 items-center" onSubmit={submitHandler}>
         <label>
           <div>
             FirstName<sup>*</sup>
@@ -114,7 +117,7 @@ const SignupPage = () => {
           {loading ? "loading..." : "signup"}
         </button>
       </form>
-      <div>
+      <div className="flex justify-center">
         Have an account already?{" "}
         <Link className="underline text-blue-900" to={"/signin"}>
           Signin

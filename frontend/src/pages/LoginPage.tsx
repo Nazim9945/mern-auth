@@ -2,6 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { useDispatch } from "react-redux";
 import { Link, useNavigate } from "react-router-dom";
 import { setUser } from "../redux/slices/userSlice";
+import { toast } from "react-toastify";
 
 const LoginPage = () => {
     const dispatch = useDispatch();
@@ -42,7 +43,9 @@ const LoginPage = () => {
         dispatch(setUser(newuser));
         setLoading(false);
         setFormData({ email: "", password: "" });
+        toast(result.message);
         navigate("/");
+
 
     } catch (error) {
         setLoading(false);

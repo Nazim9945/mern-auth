@@ -5,6 +5,7 @@ import { setUser, signOut } from "../redux/slices/userSlice"
 import { useNavigate } from "react-router-dom"
 
 import { FiEye, FiEyeOff } from "react-icons/fi"
+import { toast } from "react-toastify"
 const PorfilePage = () => {
   const dispatch=useDispatch()
   const [newshow,setnewShow]=useState(true);
@@ -43,8 +44,8 @@ const PorfilePage = () => {
      setLastName("");
      setNewPassword("");
      setOldPassword("");
-    console.log(result.user)
-
+     setError("");
+     toast(result.message);
   }
   const dltUserHandler=async()=>{
     const options={
@@ -59,12 +60,13 @@ const PorfilePage = () => {
   const data=await fetch("http://localhost:4000/api/v1/deleteUser",options);  
   const result=await data.json();
   if(result.success===false){
-    console.log(result.message)
+   toast(result.message)
     return;
   }
   localStorage.removeItem("token");
   localStorage.removeItem("user");
   dispatch(setUser(null))
+  toast(result.message)
   navigate("/signin")
 }
   return (
