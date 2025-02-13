@@ -9,15 +9,11 @@ export const authMiddleware= async(req:Request,res:Response,next:NextFunction)=>
             const token=req.headers.token || req.body.token;
             if(!token){
                 return res.status(404).json({
+                    success:false,
                     message:"please login first"
                 })
             }
             const payload=jwt.verify(token,process.env.JWT_SECRET || "");
-            if(!payload){
-                return res.status(404).json({
-                    message:"Token is invalid"
-                })
-            }
            
             req.body.user=payload;
             next();
@@ -25,7 +21,8 @@ export const authMiddleware= async(req:Request,res:Response,next:NextFunction)=>
         } catch (error) {
             console.log(error);
             return res.status(404).json({
-                message:"invalid"
+                success:false,
+                message:"invalid token"
             })
             
         }

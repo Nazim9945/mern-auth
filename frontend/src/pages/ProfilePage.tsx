@@ -31,21 +31,30 @@ const PorfilePage = () => {
       },
       body:JSON.stringify({firstName,lastName,newpassword,oldpassword,token:localStorage.getItem("token")})
     }
-    const data=await fetch("http://localhost:4000/api/v1/updateProfile",options);
-    const result=await data.json();
-    if(result.success===false){
-     setError(result.message);
-      return;
+    try {
+      const data = await fetch(
+        `${import.meta.env.VITE_BASE_URL}/updateProfile`,
+        options
+      );
+      const result = await data.json();
+      if (result.success === false) {
+        setError(result.message);
+        
+        return;
+      }
+      dispatch(setUser(result.user));
+      let newuser = JSON.stringify(result.user);
+      localStorage.setItem("user", newuser);
+      setFirstName("");
+      setLastName("");
+      setNewPassword("");
+      setOldPassword("");
+      setError("");
+      toast(result.message);
+    } catch (error) {
+      console.log(error);
+      toast.error("error while updating profile");
     }
-    dispatch(setUser(result.user))
-     let newuser = JSON.stringify(result.user);
-     localStorage.setItem("user", newuser);
-     setFirstName("");
-     setLastName("");
-     setNewPassword("");
-     setOldPassword("");
-     setError("");
-     toast(result.message);
   }
   const dltUserHandler=async()=>{
     const options={
@@ -57,7 +66,10 @@ const PorfilePage = () => {
       body:JSON.stringify({token:localStorage.getItem("token")})
 
   }
-  const data=await fetch("http://localhost:4000/api/v1/deleteUser",options);  
+  const data = await fetch(
+    import.meta.env.VITE_BASE_URL + "/deleteUser",
+    options
+  );  
   const result=await data.json();
   if(result.success===false){
    toast(result.message)

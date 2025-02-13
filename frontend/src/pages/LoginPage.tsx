@@ -29,7 +29,7 @@ const LoginPage = () => {
           },
           body: JSON.stringify(formData),
         };
-        const data = await fetch("http://localhost:4000/api/v1/signin", option);
+        const data = await fetch(import.meta.env.VITE_BASE_URL+"/signin", option);
         const result = await data.json();
         if(result.success===false){
             setLoading(false);
